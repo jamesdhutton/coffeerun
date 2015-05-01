@@ -36,6 +36,7 @@ app.get('/api/coffeerun/:id', function (req, res) {
     var run = coffeeruns[req.params.id];
 
 	if (run != undefined) {
+		// Return the coffee run but exclude the subscribers property, which is private
 		res.end(JSON.stringify(run, function (key,value) {if (key == 'subscribers') return undefined; return value;}
 			));
 	} else {
@@ -76,7 +77,7 @@ io.on('connection', function (socket) {
 
 
 
-server.listen(3000, function () {
+server.listen(80, function () {
 
   var host = server.address().address;
   var port = server.address().port;
