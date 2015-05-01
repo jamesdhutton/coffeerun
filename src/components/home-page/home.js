@@ -36,7 +36,7 @@ define(["knockout", "text!./home.html", "socket"], function(ko, homeTemplate, io
 
 		}); 
 
-		this.socket = io.connect('http://localhost:3000');
+		this.socket = io.connect('/');
 		this.socket.emit('subscribe', this.id);
 		this.socket.on('order', function(data) {
 
@@ -53,6 +53,7 @@ define(["knockout", "text!./home.html", "socket"], function(ko, homeTemplate, io
 
 	HomeViewModel.prototype.dispose = function() { 
 		clearInterval(this.timer);
+		this.socket.disconnect();
 	}; 
 
 
