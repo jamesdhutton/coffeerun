@@ -1,0 +1,24 @@
+<h2><span data-bind="text:owner"></span> is doing a Coffee Run!</h2>
+
+<p>Leaving in: <span data-bind="text: expiry"></span> seconds.</p>
+<p>Maximum cups: <strong data-bind="text: maxcups"></strong> </p>
+
+<h4>What coffee would you like  <span data-bind="text:owner"></span> to get for you?</h3>
+<form data-bind="submit: addOrder">
+    Your name: <input data-bind="value: newOrderOwner" placeholder="What is your name?" />
+    Your order: <input data-bind="value: newOrderCoffee" placeholder="What coffee do you want?" />
+    <button type="submit">Place Order</button>
+</form>
+
+<table>
+    <thead><tr>
+        <th>Owner</th><th>Order</th>
+    </tr></thead>
+    <tbody data-bind="foreach: orders">
+    <tr>
+        <td data-bind="text: owner" /></td>
+        <td data-bind="text: order" /></td>
+    </tr>     
+    </tbody>
+
+</table>
