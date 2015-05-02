@@ -27,7 +27,7 @@ var coffeeruns = [];
 var newrun = new coffeerun ("James", 120, 6);
 coffeeruns[123] = newrun;
 
-app.use(express.static('../src'));
+app.use(express.static('./src'));
 app.use(bodyParser.json());
 
 
