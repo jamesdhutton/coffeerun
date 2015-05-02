@@ -22,10 +22,18 @@ function coffeerun(owner, expiry, maxcups) {
 	this.subscribers = [];
 }
 
-var coffeeruns = [];
+function coffeerun_viewmodel (coffeerun) {
 
-var newrun = new coffeerun ("James", 120, 6);
-coffeeruns[123] = newrun;
+	this.owner = coffeerun.owner;
+	this.maxcups = coffeerun.maxcups;
+	this.orders = coffeerun.orders;
+	this.expiry = (coffeerun.expiry.getTime() - new Date().getTime()) / 1000;
+
+	console.log('RUN EXPIRY: %s\nCURRENT TIME: %s\nDIFF: %d', coffeerun.expiry.toString(), new Date(), this.expiry);
+
+}
+
+var coffeeruns = [];
 
 app.use(express.static('./src'));
 app.use(bodyParser.json());
@@ -36,16 +44,15 @@ app.get('/api/coffeerun/:id', function (req, res) {
     var run = coffeeruns[req.params.id];
 
 	if (run != undefined) {
-		// Return the coffee run but exclude the subscribers property, which is private
-		res.end(JSON.stringify(run, function (key,value) {if (key == 'subscribers') return undefined; return value;}
-			));
+		res.end(JSON.stringify( new coffeerun_viewmodel(run) ));
+
 	} else {
 		res.end('NOT FOUND :(');
 	}
 
 });
 
-app.post('/api/coffeerun/:id', function (req, res) {
+app.post('/api/order/:id', function (req, res) {
 
 	console.log ('NEW ORDER: ' + req.body.owner );
 
@@ -60,6 +67,22 @@ app.post('/api/coffeerun/:id', function (req, res) {
 	for (var i = 0; i < run.subscribers.length; i++) {
 		run.subscribers[i].emit('order', newOrder);
 	}
+});
+
+
+app.post('/api/coffeerun', function (req, res) {
+
+	var currentTime = new Date();
+
+	var newRun = new coffeerun(
+		req.body.owner,
+		new Date(currentTime.getTime() + req.body.leavingTime*60000),
+		req.body.maxcups
+	);
+
+	coffeeruns.push(newRun);
+
+	console.log ('NEW RUN: id = %d', (coffeeruns.length - 1) );
 
 });
 
@@ -74,8 +97,6 @@ io.on('connection', function (socket) {
     console.log('NEW CONNECTION');
 
 });
-
-
 
 server.listen(80, function () {
 

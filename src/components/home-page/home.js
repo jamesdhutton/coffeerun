@@ -60,13 +60,11 @@ define(["knockout", "text!./home.html", "socket"], function(ko, homeTemplate, io
 	HomeViewModel.prototype.addOrder = function() {
 
 		var self = this;
-
 		var newOrder = new Order(this.newOrderOwner(), this.newOrderCoffee());
 		
-
 		$.ajax({
 		    type: "POST",
-		    url: "/api/coffeerun/" + self.id,
+		    url: "/api/order/" + self.id,
 		    data: JSON.stringify({owner: newOrder.owner(), order: newOrder.order()}),
 		    contentType: "application/json; charset=utf-8",
 		    dataType: "json",
@@ -76,7 +74,6 @@ define(["knockout", "text!./home.html", "socket"], function(ko, homeTemplate, io
 		    }
 		});
 
-		
 
 	}
 
