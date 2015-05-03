@@ -1,24 +1,54 @@
-<h2><span data-bind="text:owner"></span> is doing a Coffee Run!</h2>
+<div class="row">
+  
+    <div class="col-md-12">
+          <h2><span data-bind="text:owner"></span> is doing a Coffee Run!</h2>
+    </div>
 
-<p>Leaving in: <span data-bind="text: expiry"></span> seconds.</p>
-<p>Maximum cups: <strong data-bind="text: maxcups"></strong> </p>
+    <div class="col-md-6">
+        <p>Leaving in: <span data-bind="text: expirytext"></span> seconds.</p>
+    </div>
 
-<h4>What coffee would you like  <span data-bind="text:owner"></span> to get for you?</h3>
-<form data-bind="submit: addOrder">
-    Your name: <input data-bind="value: newOrderOwner" placeholder="What is your name?" />
-    Your order: <input data-bind="value: newOrderCoffee" placeholder="What coffee do you want?" />
-    <button type="submit">Place Order</button>
-</form>
+    <div class="col-md-6">
+        <p>Maximum cups: <strong data-bind="text: maxcups"></strong> </p>
+    </div>
 
-<table>
-    <thead><tr>
-        <th>Owner</th><th>Order</th>
-    </tr></thead>
-    <tbody data-bind="foreach: orders">
-    <tr>
-        <td data-bind="text: owner" /></td>
-        <td data-bind="text: order" /></td>
-    </tr>     
-    </tbody>
+</div>
 
-</table>
+
+<div class="row">
+    <div class="col-md-12">
+        <h4>What coffee would you like  <span data-bind="text:owner"></span> to get for you?</h3>
+
+        <form data-bind="submit: addOrder" class="form form-inline" role="form">
+          <div class="form-group">
+            <label for="name">Your name</label> 
+            <input class="form-control" id="name" data-bind="value: newOrderOwner" placeholder="What is your name?" />
+          </div>
+          <div class="form-group">
+            <label for="order">Your order</label> 
+            <input class="form-control" id="order" data-bind="value: newOrderCoffee" placeholder="What coffee do you want?" />
+          </div>
+
+            <button type="submit" class="btn btn-primary">Place Order</button>
+        </form>
+    </div>
+</div>
+
+
+<div class="row">
+    <div class="col-md-12">
+        <h4>Here are everyone's orders:</h4>
+        <table class="table">
+            <thead><tr>
+                <th>Owner</th><th>Order</th>
+            </tr></thead>
+            <tbody data-bind="foreach: orders">
+            <tr>
+                <td data-bind="text: owner" /></td>
+                <td data-bind="text: order" /></td>
+            </tr>     
+            </tbody>
+        </table>
+    </div>
+</div>
+

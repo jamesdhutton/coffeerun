@@ -8,16 +8,19 @@ define(['knockout', 'text!./run.html', 'socket'], function(ko, templateMarkup, i
 
   function RunPage(route) {
 
+    var self = this;
+
     this.id = route.id;
     this.owner = ko.observable('');
     this.expiry = ko.observable(0);
     this.maxcups = ko.observable(0);
     this.orders = ko.observableArray([]);
+    this.expirytext = ko.computed(function () {
+        return Math.floor(self.expiry() / 60) + ':' + (self.expiry() % 60);
+      });
 
     this.newOrderOwner = ko.observable('');
     this.newOrderCoffee = ko.observable('');
-
-    var self = this;
 
     this.socket = io.connect('/', {multiplex: false});
     this.socket.emit('subscribe', this.id);

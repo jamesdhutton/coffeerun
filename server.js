@@ -28,7 +28,7 @@ function coffeerun_viewmodel (coffeerun) {
 	this.owner = coffeerun.owner;
 	this.maxcups = coffeerun.maxcups;
 	this.orders = coffeerun.orders;
-	this.expiry = (coffeerun.expiry.getTime() - new Date().getTime()) / 1000;
+	this.expiry = Math.floor((coffeerun.expiry.getTime() - new Date().getTime()) / 1000);
 
 	console.log('RUN EXPIRY: %s\nCURRENT TIME: %s\nDIFF: %d', coffeerun.expiry.toString(), new Date(), this.expiry);
 
