@@ -24,6 +24,7 @@ function coffeerun(owner, expiry, maxcups) {
 
 function coffeerun_viewmodel (coffeerun) {
 
+	this.id = 0;
 	this.owner = coffeerun.owner;
 	this.maxcups = coffeerun.maxcups;
 	this.orders = coffeerun.orders;
@@ -82,7 +83,12 @@ app.post('/api/coffeerun', function (req, res) {
 
 	coffeeruns.push(newRun);
 
-	console.log ('NEW RUN: id = %d', (coffeeruns.length - 1) );
+	var newRunViewModel = new coffeerun_viewmodel(newRun);
+	newRunViewModel.id = coffeeruns.length - 1;
+
+	res.writeHead(200, {'Content-Type': 'application/json'});
+	console.log ('NEW RUN: ', JSON.stringify(newRunViewModel) );
+	res.end(JSON.stringify(newRunViewModel));
 
 });
 

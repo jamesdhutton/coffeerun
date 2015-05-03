@@ -11,7 +11,7 @@ define(["knockout", "text!./home.html", "socket"], function(ko, homeTemplate, io
 
 		this.id = route.id;
 		this.owner = ko.observable('');
-		this.expiry = ko.observable(120);
+		this.expiry = ko.observable(0);
 		this.maxcups = ko.observable(0);
 		this.orders = ko.observableArray([]);
 
@@ -20,23 +20,7 @@ define(["knockout", "text!./home.html", "socket"], function(ko, homeTemplate, io
 
 		var self = this;
 
-		$.getJSON("/api/coffeerun/" + this.id, function(coffeerun) {
-
-			/*
-
-		    var mappedRuns = $.map(allData, function(item) { return new CoffeeRun(item) });
-		        self.message('There are ' +  mappedRuns.length + ' runs in the result');
-
-			*/
-
-			self.owner(coffeerun.owner);
-			self.expiry(coffeerun.expiry);
-			self.maxcups(coffeerun.maxcups);
-			self.orders(coffeerun.orders);
-
-		}); 
-
-		this.socket = io.connect('/');
+		this.socket = io.connect('/', {multiplex: false});
 		this.socket.emit('subscribe', this.id);
 		this.socket.on('order', function(data) {
 
@@ -45,9 +29,15 @@ define(["knockout", "text!./home.html", "socket"], function(ko, homeTemplate, io
 			
 		});
 
+		$.getJSON("/api/coffeerun/" + this.id, function(coffeerun) {
 
+			self.owner(coffeerun.owner);
+			self.expiry(coffeerun.expiry);
+			self.maxcups(coffeerun.maxcups);
+			self.orders(coffeerun.orders);
+			self.timer = setInterval (function () {self.expiry(  self.expiry()-1   )}, 1000 );
 
-		this.timer = setInterval (function () {self.expiry(  self.expiry()-1   )}, 1000 );
+		}); 
 
 	}
 

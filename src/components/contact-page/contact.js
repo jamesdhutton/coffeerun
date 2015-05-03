@@ -24,7 +24,7 @@ define(['knockout', 'text!./contact.html'], function(ko, templateMarkup) {
 		    data: JSON.stringify({owner: self.owner(), leavingTime: self.leavingTime().time, maxcups: self.maxcups() }),
 		    contentType: "application/json; charset=utf-8",
 		    dataType: "json",
-		    success: function(data){ },
+		    success: function(newRun)  { window.location.href = '/#new-run/' + newRun.id; },
 		    failure: function(errMsg) {
 		        alert(errMsg);
 		    }
