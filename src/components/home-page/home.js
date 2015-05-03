@@ -1,72 +1,43 @@
-define(["knockout", "text!./home.html", "socket"], function(ko, homeTemplate, io) {
+define(["knockout", "text!./home.html"], function(ko, homeTemplate) {
 
 
-	function Order(owner, order) {
-		this.owner = ko.observable(owner);
-		this.order = ko.observable(order);
-	}
+  function HomeViewModel(params) {
 
+    this.availableTimes = [
+        { timeText: "5 minutes", time: 5 },
+        { timeText: "10 minutes", time: 10 },
+        { timeText: "15 minutes", time: 15 }
+    ];
 
-	function HomeViewModel(route) {
+    this.leavingTime = ko.observable({timeText: "5 minutes", time: 5 });
+    this.maxcups = ko.observable(6);
+    this.owner = ko.observable('');
 
-		this.id = route.id;
-		this.owner = ko.observable('');
-		this.expiry = ko.observable(0);
-		this.maxcups = ko.observable(0);
-		this.orders = ko.observableArray([]);
+  }
 
-		this.newOrderOwner = ko.observable('');
-		this.newOrderCoffee = ko.observable('');
+  HomeViewModel.prototype.createRun = function() {
 
-		var self = this;
+  		var self = this;
 
-		this.socket = io.connect('/', {multiplex: false});
-		this.socket.emit('subscribe', this.id);
-		this.socket.on('order', function(data) {
-
-			var newOrder = new Order(data.owner, data.order);
-			self.orders.push (newOrder);
-			
-		});
-
-		$.getJSON("/api/coffeerun/" + this.id, function(coffeerun) {
-
-			self.owner(coffeerun.owner);
-			self.expiry(coffeerun.expiry);
-			self.maxcups(coffeerun.maxcups);
-			self.orders(coffeerun.orders);
-			self.timer = setInterval (function () {self.expiry(  self.expiry()-1   )}, 1000 );
-
-		}); 
-
-	}
-
-	HomeViewModel.prototype.dispose = function() { 
-		clearInterval(this.timer);
-		this.socket.disconnect();
-	}; 
-
-
-	HomeViewModel.prototype.addOrder = function() {
-
-		var self = this;
-		var newOrder = new Order(this.newOrderOwner(), this.newOrderCoffee());
-		
 		$.ajax({
 		    type: "POST",
-		    url: "/api/order/" + self.id,
-		    data: JSON.stringify({owner: newOrder.owner(), order: newOrder.order()}),
+		    url: "/api/coffeerun",
+		    data: JSON.stringify({owner: self.owner(), leavingTime: self.leavingTime().time, maxcups: self.maxcups() }),
 		    contentType: "application/json; charset=utf-8",
 		    dataType: "json",
-		    success: function(data){ },
+		    success: function(newRun)  { window.location.href = '/#new-run/' + newRun.id; },
 		    failure: function(errMsg) {
 		        alert(errMsg);
 		    }
 		});
 
+  };
 
-	}
+  // This runs when the component is torn down. Put here any logic necessary to clean up,
+  // for example cancelling setTimeouts or disposing Knockout subscriptions/computeds.
+  HomeViewModel.prototype.dispose = function() { };
+  
+  return { viewModel: HomeViewModel, template: homeTemplate };
 
-	return { viewModel: HomeViewModel, template: homeTemplate };
 
 });

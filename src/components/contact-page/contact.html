@@ -1,28 +1,24 @@
-<div class="row">
+<h2><span data-bind="text:owner"></span> is doing a Coffee Run!</h2>
 
-	<div class="col-md-6 col-md-offset-3">
+<p>Leaving in: <span data-bind="text: expiry"></span> seconds.</p>
+<p>Maximum cups: <strong data-bind="text: maxcups"></strong> </p>
 
-		<h1 class="text-center">Your turn to buy the coffee?</h1>
+<h4>What coffee would you like  <span data-bind="text:owner"></span> to get for you?</h3>
+<form data-bind="submit: addOrder">
+    Your name: <input data-bind="value: newOrderOwner" placeholder="What is your name?" />
+    Your order: <input data-bind="value: newOrderCoffee" placeholder="What coffee do you want?" />
+    <button type="submit">Place Order</button>
+</form>
 
-		<h2 class="text-center">Coffee run can help!</h2>
+<table>
+    <thead><tr>
+        <th>Owner</th><th>Order</th>
+    </tr></thead>
+    <tbody data-bind="foreach: orders">
+    <tr>
+        <td data-bind="text: owner" /></td>
+        <td data-bind="text: order" /></td>
+    </tr>     
+    </tbody>
 
-		<form>
-		  <div class="form-group">
-		    <label for="name">Your name</label> 
-		    <input id="name" class="form-control" data-bind="value: owner" placeholder="What is your name?" />
-		  </div>
-		  <div class="form-group">
-		    <label for="leavingtime">When are you leaving?</label> 
-		    <select class="form-control" id="leavingtime" data-bind="options: availableTimes, value: leavingTime, optionsText: 'timeText'"></select>
-		  </div>
-		  <div class="form-group">
-		    <label for="maxcups">Maximum  number of cups you'll buy</label> 
-		    <input class="form-control" id="maxcups" type="number" min="1" max="50" data-bind="value: maxcups" />
-		  </div>
-
-		  <button type="submit" data-bind="click: createRun" class="btn btn-default">Start Run</button>
-		</form>
-
-	</div>
-
-</div>
+</table>
