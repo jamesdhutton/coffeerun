@@ -1,0 +1,28 @@
+<div class="row">
+
+    <div class="col-md-6 col-md-offset-3">
+
+        <h1 class="text-center">Your turn to buy the coffee?</h1>
+
+        <h2 class="text-center">Coffee run can help!</h2>
+
+        <form>
+          <div class="form-group">
+            <label for="name">Your name</label> 
+            <input id="name" class="form-control" data-bind="value: owner" placeholder="What is your name?" />
+          </div>
+          <div class="form-group">
+            <label for="leavingtime">When are you leaving?</label> 
+            <select class="form-control" id="leavingtime" data-bind="options: availableTimes, value: leavingTime, optionsText: 'timeText'"></select>
+          </div>
+          <div class="form-group">
+            <label for="maxcups">Maximum  number of cups you'll buy</label> 
+            <input class="form-control" id="maxcups" type="number" min="1" max="50" data-bind="value: maxcups" />
+          </div>
+
+          <button type="submit" data-bind="click: createRun" class="btn btn-default">Start Run</button>
+        </form>
+
+    </div>
+
+</div>
