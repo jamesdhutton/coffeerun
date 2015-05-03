@@ -2,7 +2,7 @@ define(['knockout', 'text!./new-run.html'], function(ko, templateMarkup) {
 
   function NewRun(route) {
 
-  	this.runaddress = ko.observable(document.location.origin + '/#/contact-page/' + route.id);
+  	this.runaddress = ko.observable(document.location.origin + '/#/run/' + route.id);
 
 
   }

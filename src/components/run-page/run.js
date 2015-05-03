@@ -1,4 +1,4 @@
-define(['knockout', 'text!./contact.html', 'socket'], function(ko, templateMarkup, io) {
+define(['knockout', 'text!./run.html', 'socket'], function(ko, templateMarkup, io) {
 
   function Order(owner, order) {
     this.owner = ko.observable(owner);
@@ -6,7 +6,7 @@ define(['knockout', 'text!./contact.html', 'socket'], function(ko, templateMarku
   }
 
 
-  function ContactPage(route) {
+  function RunPage(route) {
 
     this.id = route.id;
     this.owner = ko.observable('');
@@ -40,13 +40,13 @@ define(['knockout', 'text!./contact.html', 'socket'], function(ko, templateMarku
 
   }
 
-  ContactPage.prototype.dispose = function() { 
+  RunPage.prototype.dispose = function() { 
     clearInterval(this.timer);
     this.socket.disconnect();
   }; 
 
 
-  ContactPage.prototype.addOrder = function() {
+  RunPage.prototype.addOrder = function() {
 
     var self = this;
     var newOrder = new Order(this.newOrderOwner(), this.newOrderCoffee());
@@ -66,6 +66,6 @@ define(['knockout', 'text!./contact.html', 'socket'], function(ko, templateMarku
 
   }
 
-  return { viewModel: ContactPage, template: templateMarkup };
+  return { viewModel: RunPage, template: templateMarkup };
 
 });
