@@ -1,25 +1,25 @@
 <div class="row">
   
     <div class="col-md-12">
-          <h2><span data-bind="text:owner"></span> is doing a Coffee Run!</h2>
+          <h2><span data-bind="text:owner"></span> is doing a Coffee Run.</h2>
     </div>
 
-    <div class="col-md-6">
-        <p>Leaving in: <span data-bind="text: expirytext"></span> seconds.</p>
+    <div class="col-md-3">
+        <h4>Leaving in: <span data-bind="text: expirytext"></span> minutes.</h4>
     </div>
 
-    <div class="col-md-6">
-        <p>Maximum cups: <strong data-bind="text: maxcups"></strong> </p>
+    <div class="col-md-3">
+        <h4>Maximum cups: <strong data-bind="text: maxcups"></strong> </h4>
     </div>
 
 </div>
 
 
 <div class="row">
-    <div class="col-md-12">
-        <h4>What coffee would you like  <span data-bind="text:owner"></span> to get for you?</h3>
+    <div class="col-md-4">
+        <h4>Get your order in!</h3>
 
-        <form data-bind="submit: addOrder" class="form form-inline" role="form">
+        <form data-bind="submit: addOrder" class="form" role="form">
           <div class="form-group">
             <label for="name">Your name</label> 
             <input class="form-control" id="name" data-bind="value: newOrderOwner" placeholder="What is your name?" />
