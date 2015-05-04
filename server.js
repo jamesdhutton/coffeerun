@@ -36,7 +36,8 @@ function coffeerun_viewmodel (coffeerun) {
 
 var coffeeruns = [];
 
-app.use(express.static('./src'));
+var staticdir = process.argv.length >= 3 ? process.argv[2] : 'src';
+app.use(express.static('./' + staticdir));
 app.use(bodyParser.json());
 
 
