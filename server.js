@@ -105,9 +105,9 @@ io.on('connection', function (socket) {
 
 });
 
-server.listen(80, function () {
+var port = process.argv.length >= 4 ? process.argv[3] : (process.env.PORT || 80);
 
-  var port = server.address().port;
+server.listen(port, function () {
 
   console.log('coffeerun is listening on port %s', port);
 
