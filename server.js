@@ -105,6 +105,8 @@ io.on('connection', function (socket) {
 
 });
 
+// Port can be supplied as 2nd command-line argument. If omitted, we check for a PORT env variable (which is how Azure supplies it).
+// If neither of the above present then we default to port 80
 var port = process.argv.length >= 4 ? process.argv[3] : (process.env.PORT || 80);
 
 server.listen(port, function () {
