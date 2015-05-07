@@ -34,7 +34,18 @@ function coffeerun_viewmodel (coffeerun) {
 
 }
 
-var coffeeruns = [];
+function makeid()
+{
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
+    for( var i=0; i < 5; i++ )
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
+}
+
+var coffeeruns = {};
 
 var staticdir = process.argv.length >= 3 ? process.argv[2] : 'src';
 app.use(express.static('./' + staticdir));
@@ -82,10 +93,14 @@ app.post('/api/coffeerun', function (req, res) {
 		req.body.maxcups
 	);
 
-	coffeeruns.push(newRun);
-
+	var newRunID = makeid();
+	// It's pretty unlikely we've already used this ID, but check just in case, and generate a new ID if so
+	while (coffeeruns[newRunID] != undefined)
+		newRunID = makeid();
+		
+	coffeeruns[newRunID] = newRun;
 	var newRunViewModel = new coffeerun_viewmodel(newRun);
-	newRunViewModel.id = coffeeruns.length - 1;
+	newRunViewModel.id = newRunID;
 
 	res.writeHead(200, {'Content-Type': 'application/json'});
 	console.log ('NEW RUN: ', JSON.stringify(newRunViewModel) );
