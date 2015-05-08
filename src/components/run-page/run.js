@@ -12,6 +12,7 @@ define(['knockout', 'text!./run.html', 'socket'], function(ko, templateMarkup, i
 
     this.id = route.id;
     this.owner = ko.observable('');
+    this.expirydatetime = new Date();
     this.expiry = ko.observable(0);
     this.maxcups = ko.observable(0);
     this.orders = ko.observableArray([]);
@@ -21,6 +22,10 @@ define(['knockout', 'text!./run.html', 'socket'], function(ko, templateMarkup, i
 
     this.newOrderOwner = ko.observable('');
     this.newOrderCoffee = ko.observable('');
+
+    this.expired = ko.computed( function () {
+      return self.expiry() <= 0;
+    });
 
     this.socket = io.connect('/', {multiplex: false});
     this.socket.emit('subscribe', this.id);
@@ -34,20 +39,31 @@ define(['knockout', 'text!./run.html', 'socket'], function(ko, templateMarkup, i
     $.getJSON("/api/coffeerun/" + this.id, function(coffeerun) {
 
       self.owner(coffeerun.owner);
-      self.expiry(coffeerun.expiry);
+      self.expirydatetime.setTime (new Date().getTime() + coffeerun.expiry * 1000);
       self.maxcups(coffeerun.maxcups);
       self.orders(coffeerun.orders);
-      self.timer = setInterval (function () {self.expiry(  self.expiry()-1   )}, 1000 );
+      self.timer = setInterval (function() {
+          self.expiry(  Math.floor((self.expirydatetime.getTime() - new Date().getTime()) / 1000)    );
+          if (self.expired())
+            self.clearTimer();
+        }, 1000 );
 
     }); 
 
   }
 
   RunPage.prototype.dispose = function() { 
-    clearInterval(this.timer);
+    this.clearTimer();
     this.socket.disconnect();
   }; 
 
+
+  RunPage.prototype.clearTimer = function() {
+    if (this.timer != null) {
+          clearInterval(this.timer);
+          this.timer = null;
+    }
+  }
 
   RunPage.prototype.addOrder = function() {
 

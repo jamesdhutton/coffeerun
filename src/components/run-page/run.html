@@ -4,18 +4,21 @@
           <h2><span data-bind="text:owner"></span> is doing a Coffee Run.</h2>
     </div>
 
-    <div class="col-md-3">
+    <div class="col-md-3" data-bind="visible: !expired()">
         <h4>Leaving in: <span data-bind="text: expirytext"></span> minutes.</h4>
     </div>
 
-    <div class="col-md-3">
+    <div class="col-md-3" data-bind="visible: !expired()">
         <h4>Maximum cups: <strong data-bind="text: maxcups"></strong> </h4>
+    </div>
+
+    <div class="col-md-3" data-bind="visible: expired()">
+        <h4>This coffee run is now closed.</h4>
     </div>
 
 </div>
 
-
-<div class="row">
+<div class="row" data-bind="visible: !expired()">
     <div class="col-md-4">
         <h4>Get your order in!</h3>
 
