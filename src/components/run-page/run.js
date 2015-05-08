@@ -17,7 +17,7 @@ define(['knockout', 'text!./run.html', 'socket'], function(ko, templateMarkup, i
     this.maxcups = ko.observable(0);
     this.orders = ko.observableArray([]);
     this.expirytext = ko.computed(function () {
-        return Math.floor(self.expiry() / 60) + ':' + (self.expiry() % 60);
+          return Math.floor(self.expiry() / 60) + ':' + ((self.expiry() % 60) < 10 ? '0' : '') + (self.expiry() % 60);
       });
 
     this.newOrderOwner = ko.observable('');
