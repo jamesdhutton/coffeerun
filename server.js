@@ -6,13 +6,6 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);
 
 
-function coffeeorder(owner, order) {
-
-	this.owner = owner;
-	this.order = order;
-
-}
-
 function coffeerun(owner, expiry, maxcups) {
 
 	this.owner = owner;
