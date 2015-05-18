@@ -6,8 +6,8 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);
 
 
-function CoffeeRun(owner, expiry, maxcups) {
-
+function CoffeeRun(id, owner, expiry, maxcups) {
+	this.id = id;
 	this.owner = owner;
 	this.expiry = expiry;
 	this.maxcups = maxcups;
@@ -17,14 +17,13 @@ function CoffeeRun(owner, expiry, maxcups) {
 
 function CoffeeRunViewModel (coffeerun) {
 
-	this.id = 0;
+	this.id = coffeerun.id;
 	this.owner = coffeerun.owner;
 	this.maxcups = coffeerun.maxcups;
 	this.orders = coffeerun.orders;
 	this.expiry = Math.floor((coffeerun.expiry.getTime() - new Date().getTime()) / 1000);
 
 	console.log('RUN EXPIRY: %s\nCURRENT TIME: %s\nDIFF: %d', coffeerun.expiry.toString(), new Date(), this.expiry);
-
 }
 
 function makeid()
@@ -36,6 +35,18 @@ function makeid()
         text += possible.charAt(Math.floor(Math.random() * possible.length));
 
     return text;
+}
+
+function respondJSON(res, obj)
+{
+	res.writeHead(200, {'Content-Type': 'application/json'});
+	res.end(JSON.stringify( obj ));
+}
+
+function respondNotFound(res)
+{
+	res.writeHead(404, {'Content-Type': 'application/json'});
+	res.end("{error: 'Not found'}");	
 }
 
 var coffeeruns = {};
@@ -50,10 +61,10 @@ app.get('/api/coffeerun/:id', function (req, res) {
     var run = coffeeruns[req.params.id];
 
 	if (run != undefined) {
-		res.end(JSON.stringify( new CoffeeRunViewModel(run) ));
+		respondJSON( res, new CoffeeRunViewModel(run) );
 
 	} else {
-		res.end('NOT FOUND :(');
+		respondNotFound (res);
 	}
 
 });
@@ -63,41 +74,43 @@ app.post('/api/order/:id', function (req, res) {
 	console.log ('NEW ORDER: ' + req.body.owner );
 
 	var run = coffeeruns[req.params.id];
-	var newOrder = req.body;
-	run.orders.push(newOrder);
-	res.writeHead(200, {'Content-Type': 'application/json'});
-	res.end('{}');
-
-	console.log ('Sending event to %d subscribers', run.subscribers.length);
-
-	for (var i = 0; i < run.subscribers.length; i++) {
-		run.subscribers[i].emit('order', newOrder);
-	}
+	if (run != undefined) {
+		var newOrder = req.body;
+		run.orders.push(newOrder);
+		respondJSON(res, newOrder);
+	
+		console.log ('Sending event to %d subscribers', run.subscribers.length);
+	
+		for (var i = 0; i < run.subscribers.length; i++) {
+			run.subscribers[i].emit('order', newOrder);
+		}
+	} else {
+		respondNotFound (res);
+	}	
 });
 
 
 app.post('/api/coffeerun', function (req, res) {
 
+	var newRunID = makeid();
+	// It's pretty unlikely we've already used this ID, but check just in case, and generate a new ID if so
+	while (coffeeruns[newRunID] != undefined)
+		newRunID = makeid();
+
 	var currentTime = new Date();
 
 	var newRun = new CoffeeRun(
+		newRunID,
 		req.body.owner,
 		new Date(currentTime.getTime() + req.body.leavingTime*60000),
 		req.body.maxcups
 	);
 
-	var newRunID = makeid();
-	// It's pretty unlikely we've already used this ID, but check just in case, and generate a new ID if so
-	while (coffeeruns[newRunID] != undefined)
-		newRunID = makeid();
-		
 	coffeeruns[newRunID] = newRun;
 	var newRunViewModel = new CoffeeRunViewModel(newRun);
-	newRunViewModel.id = newRunID;
 
-	res.writeHead(200, {'Content-Type': 'application/json'});
 	console.log ('NEW RUN: ', JSON.stringify(newRunViewModel) );
-	res.end(JSON.stringify(newRunViewModel));
+	respondJSON(res, newRunViewModel);
 
 });
 
