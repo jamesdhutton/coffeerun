@@ -1,5 +1,4 @@
-define(["knockout", "text!./home.html"], function(ko, homeTemplate) {
-
+define(["knockout", "jquery", "jquery-validation", "text!./home.html"], function(ko, $, jqv, homeTemplate) {
 
   function HomeViewModel(params) {
 
@@ -15,9 +14,12 @@ define(["knockout", "text!./home.html"], function(ko, homeTemplate) {
 
   }
 
-  HomeViewModel.prototype.createRun = function() {
+  HomeViewModel.prototype.createRun = function(formElement) {
+    
+    if (!$(formElement).valid())
+      return;
 
-  		var self = this;
+  	var self = this;
 
 		$.ajax({
 		    type: "POST",

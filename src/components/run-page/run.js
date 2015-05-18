@@ -1,4 +1,4 @@
-define(['knockout', 'text!./run.html', 'socket'], function(ko, templateMarkup, io) {
+define(['knockout', 'jquery','jquery-validation', 'text!./run.html', 'socket'], function(ko, $, jqv, templateMarkup, io) {
 
   function Order(owner, order) {
     this.owner = ko.observable(owner);
@@ -65,7 +65,10 @@ define(['knockout', 'text!./run.html', 'socket'], function(ko, templateMarkup, i
     }
   }
 
-  RunPage.prototype.addOrder = function() {
+  RunPage.prototype.addOrder = function(formElement) {
+    
+    if (!$(formElement).valid())
+      return;
 
     var self = this;
     var newOrder = new Order(this.newOrderOwner(), this.newOrderCoffee());

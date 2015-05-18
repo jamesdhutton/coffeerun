@@ -6,10 +6,10 @@
 
         <h2 class="text-center">CoffeeRun can help!</h2>
 
-        <form>
+        <form data-bind="submit: createRun">
           <div class="form-group">
             <label for="name">Your name</label> 
-            <input id="name" class="form-control" data-bind="value: owner" placeholder="What is your name?" />
+            <input id="name" name="name" class="form-control" data-bind="value: owner" placeholder="What is your name?" required maxlength='20'/>
           </div>
           <div class="form-group">
             <label for="leavingtime">When are you leaving?</label> 
@@ -17,10 +17,10 @@
           </div>
           <div class="form-group">
             <label for="maxcups">Maximum  number of cups you'll buy</label> 
-            <input class="form-control" id="maxcups" type="number" min="1" max="50" data-bind="value: maxcups" />
+            <input class="form-control" id="maxcups" type="number" min="1" max="50" data-bind="value: maxcups" required digits maxlength='2'/>
           </div>
 
-          <button type="submit" data-bind="click: createRun" class="btn btn-primary">Start Run</button>
+          <button type="submit" class="btn btn-primary">Start Run</button>
         </form>
 
     </div>
