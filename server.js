@@ -6,7 +6,7 @@ var server = require('http').Server(app);
 var io = require('socket.io')(server);
 
 
-function coffeerun(owner, expiry, maxcups) {
+function CoffeeRun(owner, expiry, maxcups) {
 
 	this.owner = owner;
 	this.expiry = expiry;
@@ -15,7 +15,7 @@ function coffeerun(owner, expiry, maxcups) {
 	this.subscribers = [];
 }
 
-function coffeerun_viewmodel (coffeerun) {
+function CoffeeRunViewModel (coffeerun) {
 
 	this.id = 0;
 	this.owner = coffeerun.owner;
@@ -50,7 +50,7 @@ app.get('/api/coffeerun/:id', function (req, res) {
     var run = coffeeruns[req.params.id];
 
 	if (run != undefined) {
-		res.end(JSON.stringify( new coffeerun_viewmodel(run) ));
+		res.end(JSON.stringify( new CoffeeRunViewModel(run) ));
 
 	} else {
 		res.end('NOT FOUND :(');
@@ -80,7 +80,7 @@ app.post('/api/coffeerun', function (req, res) {
 
 	var currentTime = new Date();
 
-	var newRun = new coffeerun(
+	var newRun = new CoffeeRun(
 		req.body.owner,
 		new Date(currentTime.getTime() + req.body.leavingTime*60000),
 		req.body.maxcups
@@ -92,7 +92,7 @@ app.post('/api/coffeerun', function (req, res) {
 		newRunID = makeid();
 		
 	coffeeruns[newRunID] = newRun;
-	var newRunViewModel = new coffeerun_viewmodel(newRun);
+	var newRunViewModel = new CoffeeRunViewModel(newRun);
 	newRunViewModel.id = newRunID;
 
 	res.writeHead(200, {'Content-Type': 'application/json'});
