@@ -117,13 +117,12 @@ app.post('/api/coffeerun', function (req, res) {
 io.on('connection', function (socket) {
 
 	socket.on('subscribe', function(runid) {
-		console.log('Subscription to run %s', runid);
 		var run = coffeeruns[runid];
-		run.subscribers.push(this);
+		if (run != undefined) {
+			console.log('Subscription to run %s', runid);
+			run.subscribers.push(this);
+		}
 	});
-
-    console.log('NEW CONNECTION');
-
 });
 
 // Port can be supplied as 2nd command-line argument. If omitted, we check for a PORT env variable (which is how Azure supplies it).
