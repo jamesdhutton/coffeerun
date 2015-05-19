@@ -5,6 +5,13 @@ define(['knockout', 'jquery','jquery-validation', 'text!./run.html', 'socket'], 
     this.order = ko.observable(order);
   }
 
+  RunPage.prototype.updateCountdown = function(self) {
+   
+    var expirySecs =  Math.floor((self.expirydatetime.getTime() - new Date().getTime()) / 1000);
+    self.expiry( expirySecs );
+    if (self.expired())
+      self.clearTimer();
+  };
 
   function RunPage(route) {
 
@@ -42,15 +49,14 @@ define(['knockout', 'jquery','jquery-validation', 'text!./run.html', 'socket'], 
       self.expirydatetime.setTime (new Date().getTime() + coffeerun.expiry * 1000);
       self.maxcups(coffeerun.maxcups);
       self.orders(coffeerun.orders);
+      self.updateCountdown(self);
       self.timer = setInterval (function() {
-          self.expiry(  Math.floor((self.expirydatetime.getTime() - new Date().getTime()) / 1000)    );
-          if (self.expired())
-            self.clearTimer();
-        }, 1000 );
-
-    }); 
+        self.updateCountdown(self); }, 1000);
+    });
 
   }
+  
+
 
   RunPage.prototype.dispose = function() { 
     this.clearTimer();
