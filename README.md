@@ -21,5 +21,6 @@ bower install
 ```
 
 ##To run:
-
+```
 sudo node server.js
+```
