@@ -33,6 +33,10 @@ define(['knockout', 'jquery','jquery-validation', 'text!./run.html', 'socket'], 
     this.expired = ko.computed( function () {
       return self.expiry() <= 0;
     });
+    
+    this.full = ko.computed( function () {
+      return self.orders().length >= self.maxcups();
+    });    
 
     this.socket = io.connect('/', {multiplex: false});
     this.socket.emit('subscribe', this.id);
